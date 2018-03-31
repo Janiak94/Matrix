@@ -162,23 +162,14 @@ public class Matrix {
 		return result;
 	}
 	
+	// Used for inversion. Returns an (N-1)x(M-1) minor matrix.
 	public Matrix subMatrix(int x, int y){
-		if(x >= this.getHeight() || y >= this.getWidth())
+		if(x >= this.getHeight() || y >= this.getWidth() || x < 0 || y < 0)
 			throw new IllegalArgumentException("Out of bounds");
 		Matrix result = new Matrix(this.getHeight()-1, this.getWidth()-1);
-		int correctioni = 0;
-		int correctionj = 0;
 		for(int i = 0; i < result.getHeight(); i++){
 			for(int j = 0; j < result.getWidth(); j++){
-				if(i >= x)
-					correctioni = 1;
-				else if(i < x)
-					correctioni = 0;
-				if(j >= y)
-					correctionj = 1;
-				else if(j < y)
-					correctionj = 0;
-				result.setElement(i, j, this.getElement(i + correctioni, j + correctionj));
+				result.setElement(i, j, this.getElement(i + (i >= x ? 1 : 0), j + (j >= y ? 1 : 0)));
 			}
 		}
 		return result;
@@ -201,6 +192,7 @@ public class Matrix {
 		return matrix.determinant();
 	}
 	
+	// Inversion by Laplace's method
 	public Matrix inverse(){
 		if(this.determinant() == 0)
 			throw new IllegalArgumentException("Non invertable matrix, det(A) = 0");
@@ -216,5 +208,4 @@ public class Matrix {
 	public static Matrix inverse(Matrix matrix){
 		return matrix.inverse();
 	}
-	
 }
